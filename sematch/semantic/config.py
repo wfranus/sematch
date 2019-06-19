@@ -1,0 +1,1 @@
+Dbpedia_Server_URL = 'http://dbpedia.org/sparql'
