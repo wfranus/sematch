@@ -16,6 +16,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+from __future__ import division, print_function
 from sematch.utility import FileIO
 
 from nltk.stem import WordNetLemmatizer
@@ -31,9 +32,11 @@ stopwords = set(nltk.corpus.stopwords.words('english'))
 wn_lemma = WordNetLemmatizer()
 reg_tokenizer = nltk.RegexpTokenizer(r'\w+')
 word_pattern = re.compile('[a-zA-Z]+')
+translator = str.maketrans('', '', string.punctuation)
 
 def word_tokenize(text):
-    tokens = reg_tokenizer.tokenize(text.encode('utf-8').translate(None, string.punctuation))
+    tokens = reg_tokenizer.tokenize(text.translate(translator))
+#     tokens = reg_tokenizer.tokenize(text.encode('utf-8').translate(None, string.punctuation))
     return list(filter(lambda token: word_pattern.match(token) and len(token) >= 1, tokens))
 
 def sent_tokenize(text):
@@ -111,7 +114,7 @@ class Extraction:
         chunks = nltk.chunk.tree2conlltags(self._chunker.parse(tags))
         # join constituent chunk words into a single chunked phrase
         return [' '.join(word for word, pos, chunk in group)
-                  for key, group in itertools.groupby(chunks, lambda (word, pos, chunk): chunk != 'O') if key]
+                  for key, group in itertools.groupby(chunks, lambda  chunk: chunk != 'O') if key]
 
     def extract_chunks_doc(self, text):
         """
@@ -276,7 +279,7 @@ class EntityFeature:
         entity_features = {e['dbr']: (e['desc'], e['cat']) for e in entity_features}
         features = []
         for i, can in enumerate(candidates):
-            print i, " ", can
+            print (i, " ", can)
             data = {}
             data['dbr'] = can
             data['desc'] = entity_features[can][0] if can in entity_features else None

@@ -46,14 +46,14 @@ class DBpediaDataTransform(DataTransform):
         self._ontology = DBpedia()
 
     def transform(self):
-        nodes =  map(lambda x:x.toPython(), self._ontology.classes)
+        nodes =  list(map(lambda x:x.toPython(), self._ontology.classes))
         node_id = {n:i for i,n in enumerate(nodes)}
         labels = [self._ontology.token(value) for i,value in enumerate(self._ontology.classes)]
         edges = []
         for i, node in enumerate(nodes):
             children = self._ontology.subClass(node)
             children = [child for child in children if child in nodes]
-            children_ids = map(lambda x:node_id[x], children)
+            children_ids = list(map(lambda x:node_id[x], children))
             for child_id in children_ids:
                 edges.append((i, child_id))
         return nodes, labels, edges
@@ -65,7 +65,7 @@ class Taxonomy:
         self._node2id = {value:i for i,value in enumerate(self._nodes)}
         self._label2id = {value:i for i, value in enumerate(self._labels)}
         #virtual root
-        self._root = len(self._nodes) + 1
+        self._root = len(list(self._nodes)) + 1
         self._taxonomy = nx.Graph()
         self._hyponyms = {}
         self._hypernyms = {}
@@ -78,7 +78,7 @@ class Taxonomy:
         # we can use string to encode tree strcuture for those trees without multiple inherences.
         id2code = {}
         id2code[self._root] = 'root'
-        children_lengths = map(lambda x: len(self._hyponyms[x]), self._hyponyms.keys())
+        children_lengths = list(map(lambda x: len(self._hyponyms[x]), self._hyponyms.keys()))
         n = max(children_lengths)
         code_length = 1
         for i in range(1, 8):
@@ -99,8 +99,8 @@ class Taxonomy:
 
 
     def build_graph(self):
-        map(self._taxonomy.add_node, range(self._root))
-        parents, children = zip(*self._edges)
+        list(map(self._taxonomy.add_node, range(self._root)))
+        parents, children = list(zip(*self._edges))
         parents_set = set(parents)
         children_set = set(children)
         root_children = []
@@ -186,7 +186,7 @@ class SimGraph:
 
     def page_rank(self):
         rank_scores = nx.pagerank(self._graph)
-        return {self._nodes[key]: value for key, value in rank_scores.iteritems()}
+        return {self._nodes[key]: value for key, value in rank_scores.items()}
 
     def hits(self):
         '''h, a = hits() hub and authority'''

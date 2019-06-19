@@ -83,7 +83,7 @@ class Matcher:
 
     def match_concepts(self, concepts, lang='en'):
         results = []
-        for i in xrange(0, len(concepts), 5):
+        for i in range(0, len(concepts), 5):
             results.extend(self._query_graph.type_query(concepts[i:i + 5], lang, self._show_query))
         result_dic = {}
         for res in results:
@@ -106,7 +106,7 @@ class Matcher:
         results = []
         concepts, entities = self.query_process(query)
         for e in entities:
-            for i in xrange(0, len(concepts), 5):
+            for i in range(0, len(concepts), 5):
                 results.extend(self._query_graph.type_entity_query(concepts[i:i + 5], e, self._show_query))
         result_dic = {}
         for res in results:
@@ -148,7 +148,7 @@ class SimClassifier:
         Compute the weight for each feature token in each category
         The weight is computed as token_count / total_feature_count
         '''
-        print "Training..."
+        print("Training...")
         cat_word = {}
         for sent, cat in corpus:
             cat_word.setdefault(cat, []).extend(word_process(word_tokenize(sent)))
