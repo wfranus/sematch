@@ -18,13 +18,12 @@
 from __future__ import print_function
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import RDF, RDFS, OWL
-from . import config
 
 class BaseSPARQL:
 
     """This class implements basic sparql patterns."""
 
-    def __init__(self, url=config.Dbpedia_Server_URL, limit=5000):
+    def __init__(self, url="http://dbpedia.org/sparql", limit=5000):
         self._url = url
         self._sparql = SPARQLWrapper(url)
         self._sparql.setReturnFormat(JSON)
